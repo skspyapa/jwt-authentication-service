@@ -1,7 +1,7 @@
 package lk.sky360solutions.authentication.controller;
 
 import lk.sky360solutions.authentication.exception.ProductNotFoundException;
-import lk.sky360solutions.authentication.model.Product;
+import lk.sky360solutions.authentication.model.persitent.Product;
 import lk.sky360solutions.authentication.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

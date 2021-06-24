@@ -1,7 +1,7 @@
 package lk.sky360solutions.authentication.config;
 
-import lk.sky360solutions.authentication.model.Role;
-import lk.sky360solutions.authentication.model.User;
+import lk.sky360solutions.authentication.model.persitent.Role;
+import lk.sky360solutions.authentication.model.persitent.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

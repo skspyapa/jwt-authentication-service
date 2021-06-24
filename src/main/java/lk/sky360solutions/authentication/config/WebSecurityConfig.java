@@ -1,9 +1,9 @@
 package lk.sky360solutions.authentication.config;
 
-import lk.sky360solutions.authentication.repository.UserRepository;
-import lk.sky360solutions.authentication.service.impl.UserDetailServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,22 +14,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private final UserRepository userRepository;
+  private final UserDetailsService userDetailsService;
 
-  public WebSecurityConfig(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
-
-  @Bean
-  public UserDetailsService userDetailsService() {
-    return new UserDetailServiceImpl(userRepository);
-  }
+  private final JwtFilter jwtFilter;
 
   @Bean
   public BCryptPasswordEncoder passwordEncoder() {
@@ -39,10 +34,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public DaoAuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    authProvider.setUserDetailsService(userDetailsService());
+    authProvider.setUserDetailsService(userDetailsService);
     authProvider.setPasswordEncoder(passwordEncoder());
 
     return authProvider;
+  }
+
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
   }
 
   @Override
@@ -54,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.cors().and().csrf().disable()
       .authorizeRequests()
+      .antMatchers("/users/login").permitAll()
       .anyRequest().authenticated()
       .and()
       .httpBasic().and()
@@ -61,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       /*
       * when we use this API request not working with cookies
       * */
+      http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
   }
 
   @Override

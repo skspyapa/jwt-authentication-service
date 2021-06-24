@@ -1,7 +1,7 @@
 package lk.sky360solutions.authentication.service.impl;
 
 import lk.sky360solutions.authentication.exception.ProductNotFoundException;
-import lk.sky360solutions.authentication.model.Product;
+import lk.sky360solutions.authentication.model.persitent.Product;
 import lk.sky360solutions.authentication.repository.ProductRepository;
 import lk.sky360solutions.authentication.service.ProductService;
 import org.springframework.stereotype.Service;

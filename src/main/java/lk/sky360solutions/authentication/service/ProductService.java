@@ -1,7 +1,7 @@
 package lk.sky360solutions.authentication.service;
 
 import lk.sky360solutions.authentication.exception.ProductNotFoundException;
-import lk.sky360solutions.authentication.model.Product;
+import lk.sky360solutions.authentication.model.persitent.Product;
 
 import java.util.List;
 

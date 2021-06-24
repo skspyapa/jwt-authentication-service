@@ -1,4 +1,4 @@
-package lk.sky360solutions.authentication.model;
+package lk.sky360solutions.authentication.model.persitent;
 
 import lombok.Data;
 
