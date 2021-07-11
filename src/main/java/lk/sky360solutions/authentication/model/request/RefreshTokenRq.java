@@ -3,10 +3,8 @@ package lk.sky360solutions.authentication.model.request;
 import lombok.Data;
 
 @Data
-public class LoginRq {
+public class RefreshTokenRq {
 
-  private String username;
-
-  private String password;
+  private String refreshToken;
 
 }
