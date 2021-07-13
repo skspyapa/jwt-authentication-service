@@ -13,7 +13,6 @@ import java.util.Set;
 public class User implements Serializable {
 
   @Id
-  @Column(name = "user_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
@@ -23,7 +22,7 @@ public class User implements Serializable {
 
   private boolean enabled;
 
-  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @ManyToMany(cascade = CascadeType.ALL)
   @JoinTable(
     name = "users_roles",
     joinColumns = @JoinColumn(name = "user_id"),
