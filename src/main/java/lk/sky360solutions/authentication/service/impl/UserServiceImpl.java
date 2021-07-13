@@ -3,15 +3,15 @@ package lk.sky360solutions.authentication.service.impl;
 import lk.sky360solutions.authentication.config.MyUserDetails;
 import lk.sky360solutions.authentication.model.persitent.User;
 import lk.sky360solutions.authentication.repository.UserRepository;
+import lk.sky360solutions.authentication.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailServiceImpl implements UserDetailsService {
+public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
 
@@ -24,5 +24,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
     }
 
     return new MyUserDetails(user);
+  }
+
+  public User findByUsername(String username) {
+    return userRepository.getByUsername(username);
   }
 }

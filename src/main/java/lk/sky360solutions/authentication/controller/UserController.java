@@ -10,12 +10,12 @@ import lk.sky360solutions.authentication.model.response.RefreshTokenRs;
 import lk.sky360solutions.authentication.model.response.TokenRs;
 import lk.sky360solutions.authentication.service.RefreshTokenService;
 import lk.sky360solutions.authentication.service.TokenService;
+import lk.sky360solutions.authentication.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import java.util.HashMap;
 public class UserController {
 
   private final AuthenticationManager authenticationManager;
-  private final UserDetailsService userDetailsService;
+  private final UserService userService;
   private final TokenService tokenService;
   private final RefreshTokenService refreshTokenService;
 
@@ -38,10 +38,11 @@ public class UserController {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRq.getUsername(),
         loginRq.getPassword()));
 
-      UserDetails userDetails = userDetailsService.loadUserByUsername(loginRq.getUsername());
+      UserDetails userDetails = userService.loadUserByUsername(loginRq.getUsername());
 
       return TokenRs.builder()
         .token(tokenService.crate(userDetails.getUsername(), new HashMap<>()))
+        .refreshToken(refreshTokenService.create(userService.findByUsername(loginRq.getUsername()).getId()).getToken())
         .build();
     } catch (Exception exception){
       throw new Exception(exception);

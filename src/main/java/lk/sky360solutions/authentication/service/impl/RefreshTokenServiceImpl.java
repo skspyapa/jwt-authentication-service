@@ -39,7 +39,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     refreshToken.setUser(user);
     refreshToken.setToken(UUID.randomUUID().toString());
-    refreshToken.setExpire(new Date(System.currentTimeMillis() + (1000 * 60)));
+    refreshToken.setExpire(new Date(System.currentTimeMillis() + (1000 * 60 * 2)));
 
     return refreshTokenRepository.save(refreshToken);
   }
