@@ -1,7 +1,14 @@
 package lk.sky360solutions.authentication.controller;
 
+import lk.sky360solutions.authentication.exception.InvalidRefreshTokenException;
+import lk.sky360solutions.authentication.exception.RefreshTokenExpiredException;
+import lk.sky360solutions.authentication.exception.UserNotFoundException;
+import lk.sky360solutions.authentication.model.persitent.RefreshToken;
 import lk.sky360solutions.authentication.model.request.LoginRq;
+import lk.sky360solutions.authentication.model.request.RefreshTokenRq;
+import lk.sky360solutions.authentication.model.response.RefreshTokenRs;
 import lk.sky360solutions.authentication.model.response.TokenRs;
+import lk.sky360solutions.authentication.service.RefreshTokenService;
 import lk.sky360solutions.authentication.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +28,7 @@ public class UserController {
   private final AuthenticationManager authenticationManager;
   private final UserDetailsService userDetailsService;
   private final TokenService tokenService;
+  private final RefreshTokenService refreshTokenService;
 
   @ResponseStatus(HttpStatus.OK)
   @PostMapping(value = "login")
@@ -38,5 +46,21 @@ public class UserController {
     } catch (Exception exception){
       throw new Exception(exception);
     }
+  }
+
+  @ResponseStatus(HttpStatus.OK)
+  @PostMapping(value = "refresh-token")
+  public RefreshTokenRs refreshToken(@RequestBody RefreshTokenRq refreshTokenRq)
+    throws InvalidRefreshTokenException,
+    RefreshTokenExpiredException, UserNotFoundException {
+
+    RefreshToken refreshToken = refreshTokenService.findByRefreshToken(refreshTokenRq.getRefreshToken());
+
+    refreshTokenService.verifyExpiration(refreshToken);
+
+    return RefreshTokenRs.builder()
+      .refreshToken(refreshTokenService.create(refreshToken.getUser().getId()).getToken())
+      .token(tokenService.crate(refreshToken.getUser().getUsername(), new HashMap<>()))
+      .build();
   }
 }
