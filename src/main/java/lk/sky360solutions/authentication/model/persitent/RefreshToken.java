@@ -13,7 +13,7 @@ public class RefreshToken implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  private Long id;
 
   @OneToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id")
